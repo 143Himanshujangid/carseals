@@ -4,8 +4,14 @@ import seaborn as sns
 import streamlit as st
 
 # Load the dataset
-file_path = 'UserCarData.csv'  # Replace with your actual file path
-data = pd.read_csv(file_path)
+file_path = 'https://raw.githubusercontent.com/143Himanshujangid/carseals/main/piyush/UserCarData.csv'  # Updated with raw URL
+
+try:
+    data = pd.read_csv(file_path)
+except FileNotFoundError:
+    st.error("The dataset file was not found. Please check the file path.")
+except Exception as e:
+    st.error(f"An error occurred while loading the data: {e}")
 
 # Set plot style
 sns.set(style="whitegrid")
@@ -136,4 +142,7 @@ selected_question = st.sidebar.selectbox("Choose a Question to Visualize", quest
 
 # Display visualization based on the selected question
 st.subheader(selected_question)
-generate_visualizations(selected_question)
+if 'data' in locals() and not data.empty:
+    generate_visualizations(selected_question)
+else:
+    st.error("Data could not be loaded. Please check the dataset.")
